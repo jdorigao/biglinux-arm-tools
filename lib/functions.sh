@@ -1263,6 +1263,8 @@ disable_splash=1
 # This line should be remoed if the legacy DWC2 controller is required
 otg_mode=1
 
+[cm5]
+dtoverlay=dwc2,dr_mode=host
 
 [all]" > $TMPDIR/boot/config.txt
     fi
