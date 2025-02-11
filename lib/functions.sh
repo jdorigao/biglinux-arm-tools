@@ -5,16 +5,16 @@ BRANCH='stable'
 DEVICE='rpi4'
 EDITION='minimal'
 VERSION=$(date +'%y'.'%m')
-LIBDIR='/usr/share/manjaro-arm-tools/lib'
-BUILDDIR='/var/lib/manjaro-arm-tools/pkg'
+LIBDIR='/usr/share/biglinux-arm-tools/lib'
+BUILDDIR='/var/lib/biglinux-arm-tools/pkg'
 BUILDSERVER='https://repo.manjaro.org/repo'
 PACKAGER=$(cat /etc/makepkg.conf | grep PACKAGER)
-PKGDIR='/var/cache/manjaro-arm-tools/pkg'
-ROOTFS_IMG='/var/lib/manjaro-arm-tools/img'
-TMPDIR='/var/lib/manjaro-arm-tools/tmp'
-IMGDIR='/var/cache/manjaro-arm-tools/img'
+PKGDIR='/var/cache/biglinux-arm-tools/pkg'
+ROOTFS_IMG='/var/lib/biglinux-arm-tools/img'
+TMPDIR='/var/lib/biglinux-arm-tools/tmp'
+IMGDIR='/var/cache/biglinux-arm-tools/img'
 IMGNAME="Manjaro-ARM-${EDITION-$DEVICE}-${VERSION}"
-PROFILES='/usr/share/manjaro-arm-tools/profiles'
+PROFILES='/usr/share/biglinux-arm-tools/profiles'
 NSPAWN='systemd-nspawn -q --resolv-conf=copy-host --timezone=off -D'
 OSDN='storage.osdn.net:/storage/groups/m/ma/manjaro-arm'
 STORAGE_USER=$(whoami)
@@ -41,7 +41,7 @@ BLUE=''
 PROGNAME=${0##*/}
 
 # Import the configuration file
-source /etc/manjaro-arm-tools/manjaro-arm-tools.conf
+source /etc/biglinux-arm-tools/biglinux-arm-tools.conf
 
 # PKGDIR and IMGDIR may not exist if they were changed in the loaded
 # configuration, so make sure they do exist
@@ -754,9 +754,9 @@ create_emmc_install() {
     echo "Enabling ethernet for first setup..."
     configure_cli_ethernet
 
-    if [ -f "$IMGDIR/Manjaro-ARM-$EDITION-$DEVICE-$VERSION.img.xz" ]; then
+    if [ -f "$IMGDIR/biglinux-arm-$EDITION-$DEVICE-$VERSION.img.xz" ]; then
         info "Copying local image for $EDITION edition on $DEVICE..."
-        cp -a $IMGDIR/Manjaro-ARM-$EDITION-$DEVICE-$VERSION.img.xz $CHROOTDIR/var/tmp/Manjaro-ARM.img.xz
+        cp -a $IMGDIR/biglinux-arm-$EDITION-$DEVICE-$VERSION.img.xz $CHROOTDIR/var/tmp/biglinux-arm.img.xz
         sync
     else
         info "Downloading image for $EDITION edition on $DEVICE..."

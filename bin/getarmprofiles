@@ -1,6 +1,6 @@
 #! /bin/bash
 
-LIBDIR=/usr/share/manjaro-arm-tools/lib
+LIBDIR=/usr/share/biglinux-arm-tools/lib
 source $LIBDIR/functions.sh
 
 # Check for root
