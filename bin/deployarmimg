@@ -1,10 +1,10 @@
 #! /bin/bash
 
 # Usage: deployarmimg image device edition version
-# Example: deployarmimg Manjaro-ARM-minimal-rpi2-18.07.zip rpi2 minimal 18.07
+# Example: deployarmimg biglinux-arm-minimal-rpi2-18.07.zip rpi2 minimal 18.07
 
 # Set globals
-LIBDIR=/usr/share/manjaro-arm-tools/lib
+LIBDIR=/usr/share/biglinux-arm-tools/lib
 TORRENT=false
 
 #imports

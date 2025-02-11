@@ -1,9 +1,9 @@
 #! /bin/bash
 
 # Set globals
-LIBDIR=/usr/share/manjaro-arm-tools/lib
+LIBDIR=/usr/share/biglinux-arm-tools/lib
 ARCH="aarch64"
-DOCKER_IMAGE_NAME="manjaro-$ARCH-base"
+DOCKER_IMAGE_NAME="biglinux-$ARCH-base"
 
 #imports
 source $LIBDIR/functions.sh
@@ -83,8 +83,8 @@ while getopts "${opt}" arg; do
 done
 
 # Log file
-mkdir -p /var/log/manjaro-arm-tools
-LOGFILE="/var/log/manjaro-arm-tools/builddockerimg-$(date +%Y-%m-%d-%H:%M).log"
+mkdir -p /var/log/biglinux-arm-tools
+LOGFILE="/var/log/biglinux-arm-tools/builddockerimg-$(date +%Y-%m-%d-%H:%M).log"
 
 # Commands
 create_rootfs 2>&1 | tee --append "$LOGFILE"

@@ -1,7 +1,7 @@
 #! /bin/bash
 
 # Configuration variables
-LIBDIR='/usr/share/manjaro-arm-tools/lib'
+LIBDIR='/usr/share/biglinux-arm-tools/lib'
 KEEPROOTFS='true'
 EXTRACTED='false'
 
@@ -68,7 +68,7 @@ if [ "x" == "x$VERSION" ]; then
   exit
 fi
 
-IMGNAME="Manjaro-ARM-$EDITION-$DEVICE-$VERSION-emmc-installer-$FLASHVERSION"
+IMGNAME="biglinux-arm-$EDITION-$DEVICE-$VERSION-emmc-installer-$FLASHVERSION"
 ARCH='aarch64'
 
 if [ ! -d "$PROFILES/arm-profiles" ]; then

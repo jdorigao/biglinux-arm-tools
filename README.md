@@ -1,13 +1,7 @@
-# Manjaro ARM Tools
-Contains scripts and files needed to build and manage manjaro-arm packages and images.
-
-This software is available in the Manjaro repository.
+# BigLinux ARM Tools
+Contains scripts and files needed to build and manage biglinux-arm packages and images.
 
 *These tools only work on Manjaro based distributions!*
-
-
-## Known issues
-Check the [Issues](https://gitlab.manjaro.org/manjaro-arm/applications/manjaro-arm-tools/-/issues) page.
 
 ## Dependencies
 These scripts rely on certain packages, other than what's in the `base` package group, to be able to function. These packages are:
@@ -32,20 +26,16 @@ These scripts rely on certain packages, other than what's in the `base` package 
 * btrfs-progs (arch repo) (for btrfs support in `buildarmimg`)
 * grub-efi-arm64 (AUR) (for generic-efi image support in `buildarmimg`)
 
-# Installation (Manjaro based distributions only)
-## From Manjaro repositories (both x64 and aarch64)
-Simply run `sudo pacman -S manjaro-arm-tools`.
-
-## From gitlab (tagged or GIT version)
-* Download the `.zip` or `.tar.gz` file from https://gitlab.manjaro.org/manjaro-arm/applications/manjaro-arm-tools.
+## From github (tagged or GIT version)
+* Download the `.zip` or `.tar.gz` file from .
 * Extract it.
-* Copy the contents of `lib/` to `/usr/share/manjaro-arm-tools/lib/`.
+* Copy the contents of `lib/` to `/usr/share/biglinux-arm-tools/lib/`.
 * Copy the contents of `bin/` to `/usr/bin/`. Remember to make them executable.
-* Create `/var/lib/manjaro-arm-tools/pkg` folder.
-* Create `/var/lib/manjaro-arm-tools/img` folder.
-* Create `/var/lib/manjaro-arm-tools/tmp` folder.
-* Create `/var/cache/manjaro-arm-tools/img` folder.
-* Create `/var/cache/manjaro-arm-tools/pkg` folder.
+* Create `/var/lib/biglinux-arm-tools/pkg` folder.
+* Create `/var/lib/biglinux-arm-tools/img` folder.
+* Create `/var/lib/biglinux-arm-tools/tmp` folder.
+* Create `/var/cache/biglinux-arm-tools/img` folder.
+* Create `/var/cache/biglinux-arm-tools/pkg` folder.
 * Install `binfmt-qemu-static` package and make sure `systemd-binfmt` is running
 
 # Usage
@@ -78,8 +68,8 @@ You can also build `any` packages, which will use the aarch64 architecture to bu
 sudo buildarmpkg -p package -a any
 ```
 
-The built packages will be copied to `$PKGDIR` as specified in `/usr/share/manjaro-arm-tools/lib/manjaro-arm-tools.conf` and placed in a subdirectory for the respective architecture.
-Default package destination is `/var/cache/manjaro-arm-tools/pkg/`.
+The built packages will be copied to `$PKGDIR` as specified in `/usr/share/biglinux-arm-tools/lib/biglinux-arm-tools.conf` and placed in a subdirectory for the respective architecture.
+Default package destination is `/var/cache/biglinux-arm-tools/pkg/`.
 
 ## signarmpkgs
 This script uses the GPG identity you have setup in your /etc/makepkg.conf to sign the packages in the current folder.
@@ -92,9 +82,9 @@ signarmpkgs
 ## buildarmimg
 For a list of supported devices and editions, please look at the Profiles repository linked below.
 
-This script will compress the image file and place it in `/var/cache/manjaro-arm-tools/img/`
+This script will compress the image file and place it in `/var/cache/biglinux-arm-tools/img/`
 
-Profiles that gets used are from this [Gitlab](https://gitlab.manjaro.org/manjaro-arm/applications/arm-profiles) repository.
+Profiles that gets used are from this [Github](https://github.com/biglinux/biglinux-arm-profiles) repository.
 
 **Syntax**
 
@@ -136,7 +126,7 @@ To build a factory image for the Pinebook Pro, with BSP uboot:
 ```
 sudo buildarmimg -d pbpro-bsp -e kde-plasma -f
 ```
-A log is located at /var/log/manjaro-arm-tools/buildarmimg-$(date +%Y-%m-%d-%H:%M).log
+A log is located at /var/log/biglinux-arm-tools/buildarmimg-$(date +%Y-%m-%d-%H:%M).log
 
 ## buildemmcinstaller (depricated)
 This script does almost the same as the `buildarmimg` script.
@@ -156,7 +146,7 @@ Be aware that the device, edition and version, most already exist on the OSDN do
 
 
 ## buildrootfs
-This script does exactly what it says it does. It builds a very small rootfs, to be used by the Manjaro ARM Installer and `buildarmimg`. Right now only supports `aarch64`.
+This script does exactly what it says it does. It builds a very small rootfs, to be used by the BigLinux ARM Installer and `buildarmimg`. Right now only supports `aarch64`.
 
 **Syntax**
 ```
@@ -168,7 +158,7 @@ To build an aarch64 rootfs:
 sudo buildrootfs
 ```
 
-A log is located at /var/log/manjaro-arm-tools/buildrootfs-$(date +%Y-%m-%d-%H:%M).log
+A log is located at /var/log/biglinux-arm-tools/buildrootfs-$(date +%Y-%m-%d-%H:%M).log
 
 ## builddockerimg
 This script is similar to `buildrootfs`, except that it builds a rootfs ready for package building and turns it into a docker image, that can be uploaded to DockerHub.
@@ -177,9 +167,9 @@ This script is similar to `buildrootfs`, except that it builds a rootfs ready fo
 ```
 sudo builddockerimg
 ```
-This uploads the docker file directly to the Manjaro ARM acccount on DockerHub.
+This uploads the docker file directly to the BigLinux ARM acccount on DockerHub.
 
-A log is located at /var/log/manjaro-arm-tools/builddockerimg-$(date +%Y-%m-%d-%H:%M).log
+A log is located at /var/log/biglinux-arm-tools/builddockerimg-$(date +%Y-%m-%d-%H:%M).log
 
 ## deployarmimg (depricated)
 This script will create checksums for and upload the newly generated image. It assumes you have upload access to our OSDN server.
@@ -194,11 +184,11 @@ deployarmimg -i image [-d device] [-e edition] [-v version] -k email@server.org 
 To upload an image to the raspberry pi minimal 18.07 folder use with torrent:
 
 ```
-deployarmimg -i Manjaro-ARM-minimal-rpi3-18.07.img.xz -d rpi3 -e minimal -v 18.07 -k email@server.org -t
+deployarmimg -i biglinux-arm-minimal-rpi3-18.07.img.xz -d rpi3 -e minimal -v 18.07 -k email@server.org -t
 ```
 
 ## getarmprofiles
-This script will just clone or update the current profile list in `/usr/share/manjaro-arm-tools/profiles/`.
+This script will just clone or update the current profile list in `/usr/share/biglinux-arm-tools/profiles/`.
 So nothing fancy.
 
 This would enable users to clone the profiles repository, make any changes they would like to their images and then build them locally.
