@@ -7,22 +7,22 @@ EDITION='minimal'
 VERSION=$(date +'%y'.'%m')
 LIBDIR='/usr/share/biglinux-arm-tools/lib'
 BUILDDIR='/var/lib/biglinux-arm-tools/pkg'
-BUILDSERVER='https://repo.manjaro.org/repo'
+BUILDSERVER='https://repo.biglinux.com.br/'
 PACKAGER=$(cat /etc/makepkg.conf | grep PACKAGER)
 PKGDIR='/var/cache/biglinux-arm-tools/pkg'
 ROOTFS_IMG='/var/lib/biglinux-arm-tools/img'
 TMPDIR='/var/lib/biglinux-arm-tools/tmp'
 IMGDIR='/var/cache/biglinux-arm-tools/img'
-IMGNAME="Manjaro-ARM-${EDITION-$DEVICE}-${VERSION}"
+IMGNAME="biglinux-arm-${EDITION-$DEVICE}-${VERSION}"
 PROFILES='/usr/share/biglinux-arm-tools/profiles'
 NSPAWN='systemd-nspawn -q --resolv-conf=copy-host --timezone=off -D'
-OSDN='storage.osdn.net:/storage/groups/m/ma/manjaro-arm'
+OSDN='storage.osdn.net:/storage/groups/m/ma/biglinux-arm'
 STORAGE_USER=$(whoami)
 FLASHVERSION=$(date +'%y'.'%m')
 ARCH='aarch64'
-USER='manjaro'
-HOSTNAME='manjaro-arm'
-PASSWORD='manjaro'
+USER='biglinux'
+HOSTNAME='biglinux-arm'
+PASSWORD='biglinux'
 CARCH=$(uname -m)
 COLORS='false'
 FILESYSTEM='ext4'
@@ -186,7 +186,7 @@ show_elapsed_time(){
 create_torrent() {
     info "Creating torrent of $IMAGE..."
     cd $IMGDIR
-    mktorrent -v -a udp://tracker.opentrackr.org:1337 -w https://osdn.net/dl/manjaro-arm/$IMAGE \
+    mktorrent -v -a udp://tracker.opentrackr.org:1337 -w https://osdn.net/dl/biglinux-arm/$IMAGE \
               -o $IMAGE.torrent $IMAGE
 }
 
@@ -345,23 +345,23 @@ create_rootfs_img() {
     mkdir -p $ROOTFS_IMG/rootfs_$ARCH
     if [[ "$KEEPROOTFS" = "false" ]]; then
         info "Removing old $ARCH rootfs archive..."
-        rm -rf $ROOTFS_IMG/Manjaro-ARM-$ARCH-latest.tar.gz*
+        rm -rf $ROOTFS_IMG/biglinux-arm-$ARCH-latest.tar.gz*
     fi
 
     # Fetch new rootfs, if it does not exist
-    if [ ! -f "$ROOTFS_IMG/Manjaro-ARM-$ARCH-latest.tar.gz" ]; then
+    if [ ! -f "$ROOTFS_IMG/biglinux-arm-$ARCH-latest.tar.gz" ]; then
         info "Downloading latest $ARCH rootfs archive..."
         wget -q --show-progress --progress=bar:force:noscroll \
-             https://github.com/manjaro-arm/rootfs/releases/latest/download/Manjaro-ARM-$ARCH-latest.tar.gz \
-             -O "$ROOTFS_IMG/Manjaro-ARM-$ARCH-latest.tar.gz"
+             https://github.com/jdorigao/rootfs/releases/latest/download/biglinux-arm-$ARCH-latest.tar.gz \
+             -O "$ROOTFS_IMG/biglinux-arm-$ARCH-latest.tar.gz"
     fi
 
     info "Extracting $ARCH rootfs..."
-    bsdtar -xpf $ROOTFS_IMG/Manjaro-ARM-$ARCH-latest.tar.gz -C $ROOTFS_IMG/rootfs_$ARCH
+    bsdtar -xpf $ROOTFS_IMG/biglinux-arm-$ARCH-latest.tar.gz -C $ROOTFS_IMG/rootfs_$ARCH
 
     # Create a "marker" that tells the packages that they're installed as part of building
     # an image, which is currently used by the "generic-post-install" package only
-    touch $ROOTFS_IMG/rootfs_$ARCH/MANJARO-ARM-IMAGE-BUILD
+    touch $ROOTFS_IMG/rootfs_$ARCH/BIGLINUX-ARM-IMAGE-BUILD
 
     # Make this symlink available, it's created by systemd on a running system
     mkdir -p $ROOTFS_IMG/rootfs_$ARCH/etc
@@ -681,7 +681,7 @@ autologin-session=i3" >> $ROOTFS_IMG/rootfs_$ARCH/etc/lightdm/lightdm.conf
     fi
 
     msg "Creating package list $IMGDIR/$IMGNAME-pkgs.txt..."
-    $NSPAWN $ROOTFS_IMG/rootfs_$ARCH pacman -Qr / > $ROOTFS_IMG/rootfs_$ARCH/var/tmp/pkglist.txt 2>/dev/null
+    $NSPAWN $ROOTFS_IMG/rootfs_$ARCH pacman -Qr / > $ROOTFS_IMG/rootfs_$ARCH/var/tmp/pkglist.txt 
     $NSPAWN $ROOTFS_IMG/rootfs_$ARCH sed -i '1s/^[^l]*l//' /var/tmp/pkglist.txt
     $NSPAWN $ROOTFS_IMG/rootfs_$ARCH sed -i '$d' /var/tmp/pkglist.txt
     mv $ROOTFS_IMG/rootfs_$ARCH/var/tmp/pkglist.txt "$IMGDIR/$IMGNAME-pkgs.txt"
@@ -1415,7 +1415,7 @@ create_bmap() {
     else
         info "Creating bmap..."
         cd ${IMGDIR}
-        rm ${IMGNAME}.img.bmap 2>/dev/null
+        rm ${IMGNAME}.img.bmap 
         bmaptool create -o ${IMGNAME}.img.bmap ${IMGNAME}.img
     fi
 }

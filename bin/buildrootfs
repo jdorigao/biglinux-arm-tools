@@ -25,7 +25,8 @@ create_rootfs () {
     msg "Creating rootfs..."
     mkdir -p $BUILDDIR/$ARCH/etc
     ln -s ../usr/lib/os-release $BUILDDIR/$ARCH/etc/os-release
-    $LIBDIR/pacstrap -G -M -C $LIBDIR/pacman.conf.$ARCH $BUILDDIR/$ARCH pacman
+    $CHROOTDIR pacman-key --init
+    $LIBDIR/pacstrap -G -M -C $LIBDIR/pacman.conf.$ARCH $BUILDDIR/$ARCH pacman biglinux-arm-keyring 
 
     # Enable cross-architecture chrooting
     cp -a /usr/bin/qemu-aarch64-static $BUILDDIR/$ARCH/usr/bin
