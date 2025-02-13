@@ -51,8 +51,8 @@ mkdir -p ${IMGDIR}
 usage_deploy_img() {
     echo "Usage: $PROGNAME [options]"
     echo "    -i <image>         Image to upload, should be an .xz compressed file"
-    echo "    -d <device>        Targeted device; default is rpi4, options are $(ls -m --width=0 "$PROFILES/arm-profiles/devices/")"
-    echo "    -e <edition>       Image edition; default is minimal, options are $(ls -m --width=0 "$PROFILES/arm-profiles/editions/")"
+    echo "    -d <device>        Targeted device; default is rpi4, options are $(ls -m --width=0 "$PROFILES/biglinux-arm-profiles/devices/")"
+    echo "    -e <edition>       Image edition; default is minimal, options are $(ls -m --width=0 "$PROFILES/biglinux-arm-profiles/editions/")"
     echo "    -v <version>       Image version; default is the current YY.MM"
     echo "    -k <GPG_key_ID>    Email address associated with the signing GPG key"
     echo "    -u <username>      OSDN account username with upload access; default is the currently logged-in local user"
@@ -76,8 +76,8 @@ usage_build_pkg() {
 
 usage_build_img() {
     echo "Usage: $PROGNAME [options]"
-    echo "    -d <device>        Targeted device; default is rpi4, options are $(ls -m --width=0 "$PROFILES/arm-profiles/devices/")"
-    echo "    -e <edition>       Image edition; default is minimal, options are $(ls -m --width=0 "$PROFILES/arm-profiles/editions/")"
+    echo "    -d <device>        Targeted device; default is rpi4, options are $(ls -m --width=0 "$PROFILES/biglinux-arm-profiles/devices/")"
+    echo "    -e <edition>       Image edition; default is minimal, options are $(ls -m --width=0 "$PROFILES/biglinux-arm-profiles/editions/")"
     echo "    -v <version>       Image version; default is the current YY.MM"
     echo "    -k <repository>    Overlay repository; options are kde-unstable and mobile, or url https://server/path/custom_repo.db"
     echo "    -i <packages>      Directory with local packages to install to the root filesystem"
@@ -96,8 +96,8 @@ usage_build_img() {
 
 usage_build_emmcflasher() {
     echo "Usage: $PROGNAME [options]"
-    echo "    -d <device>        Targeted device; default is rpi4, options are $(ls -m --width=0 "$PROFILES/arm-profiles/devices/")"
-    echo "    -e <edition>       Image edition; default is minimal, options are $(ls -m --width=0 "$PROFILES/arm-profiles/editions/")"
+    echo "    -d <device>        Targeted device; default is rpi4, options are $(ls -m --width=0 "$PROFILES/biglinux-arm-profiles/devices/")"
+    echo "    -e <edition>       Image edition; default is minimal, options are $(ls -m --width=0 "$PROFILES/biglinux-arm-profiles/editions/")"
     echo "    -v <version>       Image version; default is the current YY.MM"
     echo "    -f <flash_version> eMMC flasher image version; default is the current YY.MM"
     echo "    -i <packages>      Directory with local packages to install to the root filesystem"
@@ -322,16 +322,16 @@ EOF
 
 create_rootfs_img() {
     # Check if device file exists
-    if [ ! -f "$PROFILES/arm-profiles/devices/$DEVICE" ]; then
+    if [ ! -f "$PROFILES/biglinux-arm-profiles/devices/$DEVICE" ]; then
         echo "Device $DEVICE not valid, please choose one of the listed below"
-        echo "$(ls $PROFILES/arm-profiles/devices)"
+        echo "$(ls $PROFILES/biglinux-arm-profiles/devices)"
         exit 1
     fi
 
     # Check if edition file exists
-    if [ ! -f "$PROFILES/arm-profiles/editions/$EDITION" ]; then
+    if [ ! -f "$PROFILES/biglinux-arm-profiles/editions/$EDITION" ]; then
         echo "Edition $EDITION not valid, please choose one of the editions listed below"
-        echo "$(ls $PROFILES/arm-profiles/editions)"
+        echo "$(ls $PROFILES/biglinux-arm-profiles/editions)"
         exit 1
     fi
 
@@ -458,7 +458,7 @@ create_rootfs_img() {
     done < $SERVICES_LIST
 
     info "Applying overlays for $EDITION edition..."
-    cp -a $PROFILES/arm-profiles/overlays/$EDITION/* $ROOTFS_IMG/rootfs_$ARCH
+    cp -a $PROFILES/biglinux-arm-profiles/overlays/$EDITION/* $ROOTFS_IMG/rootfs_$ARCH
 
     # System setup
     info "Setting up system settings..."
@@ -1515,19 +1515,19 @@ export_and_clean() {
 
 clone_profiles() {
     cd $PROFILES
-    git clone --branch $1 https://gitlab.manjaro.org/manjaro-arm/applications/arm-profiles.git
+    git clone --branch main https://github.com/biglinux/biglinux-arm-profiles.git
 }
 
 get_profiles() {
     local BRANCH='master'
 
     echo "Fetching '$BRANCH' branch of ARM profiles..."
-    if ls $PROFILES/arm-profiles/* > /dev/null 2>&1; then
-        if [[ $(grep branch $PROFILES/arm-profiles/.git/config | cut -d\" -f2) = "$BRANCH" ]]; then
-            cd $PROFILES/arm-profiles
+    if ls $PROFILES/biglinux-arm-profiles/* > /dev/null 2>&1; then
+        if [[ $(grep branch $PROFILES/biglinux-arm-profiles/.git/config | cut -d\" -f2) = "$BRANCH" ]]; then
+            cd $PROFILES/biglinux-arm-profiles
             git pull
         else
-            rm -rf $PROFILES/arm-profiles
+            rm -rf $PROFILES/biglinux-arm-profiles
             clone_profiles $BRANCH
         fi
     else
