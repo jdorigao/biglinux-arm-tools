@@ -13,16 +13,16 @@ PKGDIR='/var/cache/biglinux-arm-tools/pkg'
 ROOTFS_IMG='/var/lib/biglinux-arm-tools/img'
 TMPDIR='/var/lib/biglinux-arm-tools/tmp'
 IMGDIR='/var/cache/biglinux-arm-tools/img'
-IMGNAME="Manjaro-ARM-${EDITION-$DEVICE}-${VERSION}"
+IMGNAME="biglinux-arm-${EDITION-$DEVICE}-${VERSION}"
 PROFILES='/usr/share/biglinux-arm-tools/profiles'
 NSPAWN='systemd-nspawn -q --resolv-conf=copy-host --timezone=off -D'
-OSDN='storage.osdn.net:/storage/groups/m/ma/manjaro-arm'
+OSDN='storage.osdn.net:/storage/groups/m/ma/biglinux-arm'
 STORAGE_USER=$(whoami)
 FLASHVERSION=$(date +'%y'.'%m')
 ARCH='aarch64'
-USER='manjaro'
-HOSTNAME='manjaro-arm'
-PASSWORD='manjaro'
+USER='biglinux'
+HOSTNAME='biglinux-arm'
+PASSWORD='biglinux'
 CARCH=$(uname -m)
 COLORS='false'
 FILESYSTEM='ext4'
@@ -51,8 +51,8 @@ mkdir -p ${IMGDIR}
 usage_deploy_img() {
     echo "Usage: $PROGNAME [options]"
     echo "    -i <image>         Image to upload, should be an .xz compressed file"
-    echo "    -d <device>        Targeted device; default is rpi4, options are $(ls -m --width=0 "$PROFILES/arm-profiles/devices/")"
-    echo "    -e <edition>       Image edition; default is minimal, options are $(ls -m --width=0 "$PROFILES/arm-profiles/editions/")"
+    echo "    -d <device>        Targeted device; default is rpi4, options are $(ls -m --width=0 "$PROFILES/biglinux-arm-profiles/devices/")"
+    echo "    -e <edition>       Image edition; default is minimal, options are $(ls -m --width=0 "$PROFILES/biglinux-arm-profiles/editions/")"
     echo "    -v <version>       Image version; default is the current YY.MM"
     echo "    -k <GPG_key_ID>    Email address associated with the signing GPG key"
     echo "    -u <username>      OSDN account username with upload access; default is the currently logged-in local user"
@@ -76,8 +76,8 @@ usage_build_pkg() {
 
 usage_build_img() {
     echo "Usage: $PROGNAME [options]"
-    echo "    -d <device>        Targeted device; default is rpi4, options are $(ls -m --width=0 "$PROFILES/arm-profiles/devices/")"
-    echo "    -e <edition>       Image edition; default is minimal, options are $(ls -m --width=0 "$PROFILES/arm-profiles/editions/")"
+    echo "    -d <device>        Targeted device; default is rpi4, options are $(ls -m --width=0 "$PROFILES/biglinux-arm-profiles/devices/")"
+    echo "    -e <edition>       Image edition; default is minimal, options are $(ls -m --width=0 "$PROFILES/biglinux-arm-profiles/editions/")"
     echo "    -v <version>       Image version; default is the current YY.MM"
     echo "    -k <repository>    Overlay repository; options are kde-unstable and mobile, or url https://server/path/custom_repo.db"
     echo "    -i <packages>      Directory with local packages to install to the root filesystem"
@@ -96,8 +96,8 @@ usage_build_img() {
 
 usage_build_emmcflasher() {
     echo "Usage: $PROGNAME [options]"
-    echo "    -d <device>        Targeted device; default is rpi4, options are $(ls -m --width=0 "$PROFILES/arm-profiles/devices/")"
-    echo "    -e <edition>       Image edition; default is minimal, options are $(ls -m --width=0 "$PROFILES/arm-profiles/editions/")"
+    echo "    -d <device>        Targeted device; default is rpi4, options are $(ls -m --width=0 "$PROFILES/biglinux-arm-profiles/devices/")"
+    echo "    -e <edition>       Image edition; default is minimal, options are $(ls -m --width=0 "$PROFILES/biglinux-arm-profiles/editions/")"
     echo "    -v <version>       Image version; default is the current YY.MM"
     echo "    -f <flash_version> eMMC flasher image version; default is the current YY.MM"
     echo "    -i <packages>      Directory with local packages to install to the root filesystem"
@@ -186,7 +186,7 @@ show_elapsed_time(){
 create_torrent() {
     info "Creating torrent of $IMAGE..."
     cd $IMGDIR
-    mktorrent -v -a udp://tracker.opentrackr.org:1337 -w https://osdn.net/dl/manjaro-arm/$IMAGE \
+    mktorrent -v -a udp://tracker.opentrackr.org:1337 -w https://osdn.net/dl/biglinux-arm/$IMAGE \
               -o $IMAGE.torrent $IMAGE
 }
 
@@ -322,16 +322,16 @@ EOF
 
 create_rootfs_img() {
     # Check if device file exists
-    if [ ! -f "$PROFILES/arm-profiles/devices/$DEVICE" ]; then
+    if [ ! -f "$PROFILES/biglinux-arm-profiles/devices/$DEVICE" ]; then
         echo "Device $DEVICE not valid, please choose one of the listed below"
-        echo "$(ls $PROFILES/arm-profiles/devices)"
+        echo "$(ls $PROFILES/biglinux-arm-profiles/devices)"
         exit 1
     fi
 
     # Check if edition file exists
-    if [ ! -f "$PROFILES/arm-profiles/editions/$EDITION" ]; then
+    if [ ! -f "$PROFILES/biglinux-arm-profiles/editions/$EDITION" ]; then
         echo "Edition $EDITION not valid, please choose one of the editions listed below"
-        echo "$(ls $PROFILES/arm-profiles/editions)"
+        echo "$(ls $PROFILES/biglinux-arm-profiles/editions)"
         exit 1
     fi
 
@@ -345,23 +345,23 @@ create_rootfs_img() {
     mkdir -p $ROOTFS_IMG/rootfs_$ARCH
     if [[ "$KEEPROOTFS" = "false" ]]; then
         info "Removing old $ARCH rootfs archive..."
-        rm -rf $ROOTFS_IMG/Manjaro-ARM-$ARCH-latest.tar.gz*
+        rm -rf $ROOTFS_IMG/biglinux-arm-$ARCH-latest.tar.gz*
     fi
 
     # Fetch new rootfs, if it does not exist
-    if [ ! -f "$ROOTFS_IMG/Manjaro-ARM-$ARCH-latest.tar.gz" ]; then
+    if [ ! -f "$ROOTFS_IMG/biglinux-arm-$ARCH-latest.tar.gz" ]; then
         info "Downloading latest $ARCH rootfs archive..."
         wget -q --show-progress --progress=bar:force:noscroll \
-             https://github.com/manjaro-arm/rootfs/releases/latest/download/Manjaro-ARM-$ARCH-latest.tar.gz \
-             -O "$ROOTFS_IMG/Manjaro-ARM-$ARCH-latest.tar.gz"
+             https://github.com/jdorigao/rootfs/releases/latest/download/biglinux-arm-$ARCH-latest.tar.gz \
+             -O "$ROOTFS_IMG/biglinux-arm-$ARCH-latest.tar.gz"
     fi
 
     info "Extracting $ARCH rootfs..."
-    bsdtar -xpf $ROOTFS_IMG/Manjaro-ARM-$ARCH-latest.tar.gz -C $ROOTFS_IMG/rootfs_$ARCH
+    bsdtar -xpf $ROOTFS_IMG/biglinux-arm-$ARCH-latest.tar.gz -C $ROOTFS_IMG/rootfs_$ARCH
 
     # Create a "marker" that tells the packages that they're installed as part of building
     # an image, which is currently used by the "generic-post-install" package only
-    touch $ROOTFS_IMG/rootfs_$ARCH/MANJARO-ARM-IMAGE-BUILD
+    touch $ROOTFS_IMG/rootfs_$ARCH/BIGLINUX-ARM-IMAGE-BUILD
 
     # Make this symlink available, it's created by systemd on a running system
     mkdir -p $ROOTFS_IMG/rootfs_$ARCH/etc
@@ -458,7 +458,7 @@ create_rootfs_img() {
     done < $SERVICES_LIST
 
     info "Applying overlays for $EDITION edition..."
-    cp -a $PROFILES/arm-profiles/overlays/$EDITION/* $ROOTFS_IMG/rootfs_$ARCH
+    cp -a $PROFILES/biglinux-arm-profiles/overlays/$EDITION/* $ROOTFS_IMG/rootfs_$ARCH
 
     # System setup
     info "Setting up system settings..."
@@ -681,7 +681,7 @@ autologin-session=i3" >> $ROOTFS_IMG/rootfs_$ARCH/etc/lightdm/lightdm.conf
     fi
 
     msg "Creating package list $IMGDIR/$IMGNAME-pkgs.txt..."
-    $NSPAWN $ROOTFS_IMG/rootfs_$ARCH pacman -Qr / > $ROOTFS_IMG/rootfs_$ARCH/var/tmp/pkglist.txt 2>/dev/null
+    $NSPAWN $ROOTFS_IMG/rootfs_$ARCH pacman -Qr / > $ROOTFS_IMG/rootfs_$ARCH/var/tmp/pkglist.txt 
     $NSPAWN $ROOTFS_IMG/rootfs_$ARCH sed -i '1s/^[^l]*l//' /var/tmp/pkglist.txt
     $NSPAWN $ROOTFS_IMG/rootfs_$ARCH sed -i '$d' /var/tmp/pkglist.txt
     mv $ROOTFS_IMG/rootfs_$ARCH/var/tmp/pkglist.txt "$IMGDIR/$IMGNAME-pkgs.txt"
@@ -1415,7 +1415,7 @@ create_bmap() {
     else
         info "Creating bmap..."
         cd ${IMGDIR}
-        rm ${IMGNAME}.img.bmap 2>/dev/null
+        rm ${IMGNAME}.img.bmap 
         bmaptool create -o ${IMGNAME}.img.bmap ${IMGNAME}.img
     fi
 }
@@ -1515,19 +1515,19 @@ export_and_clean() {
 
 clone_profiles() {
     cd $PROFILES
-    git clone --branch $1 https://gitlab.manjaro.org/manjaro-arm/applications/arm-profiles.git
+    git clone --branch main https://github.com/biglinux/biglinux-arm-profiles.git
 }
 
 get_profiles() {
     local BRANCH='master'
 
     echo "Fetching '$BRANCH' branch of ARM profiles..."
-    if ls $PROFILES/arm-profiles/* > /dev/null 2>&1; then
-        if [[ $(grep branch $PROFILES/arm-profiles/.git/config | cut -d\" -f2) = "$BRANCH" ]]; then
-            cd $PROFILES/arm-profiles
+    if ls $PROFILES/biglinux-arm-profiles/* > /dev/null 2>&1; then
+        if [[ $(grep branch $PROFILES/biglinux-arm-profiles/.git/config | cut -d\" -f2) = "$BRANCH" ]]; then
+            cd $PROFILES/biglinux-arm-profiles
             git pull
         else
-            rm -rf $PROFILES/arm-profiles
+            rm -rf $PROFILES/biglinux-arm-profiles
             clone_profiles $BRANCH
         fi
     else

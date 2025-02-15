@@ -71,7 +71,7 @@ fi
 IMGNAME="biglinux-arm-$EDITION-$DEVICE-$VERSION-emmc-installer-$FLASHVERSION"
 ARCH='aarch64'
 
-if [ ! -d "$PROFILES/arm-profiles" ]; then
+if [ ! -d "$PROFILES/biglinux-arm-profiles" ]; then
     getarmprofiles
 fi
 
@@ -79,10 +79,10 @@ fi
 timer_start=$(get_timer)
 
 # Package lists
-PKG_DEVICE=$(grep "^[^#;]" $PROFILES/arm-profiles/devices/$DEVICE | awk '{print $1}')
-PKG_EDITION=$(grep "^[^#;]" $PROFILES/arm-profiles/editions/minimal | awk '{print $1}')
-SRV_EDITION=$(grep "^[^#;]" $PROFILES/arm-profiles/services/minimal | awk '{print $1}')
-cat $PROFILES/arm-profiles/services/minimal | sed -e '/^#/d' > $SERVICES_LIST
+PKG_DEVICE=$(grep "^[^#;]" $PROFILES/biglinux-arm-profiles/devices/$DEVICE | awk '{print $1}')
+PKG_EDITION=$(grep "^[^#;]" $PROFILES/biglinux-arm-profiles/editions/minimal | awk '{print $1}')
+SRV_EDITION=$(grep "^[^#;]" $PROFILES/biglinux-arm-profiles/services/minimal | awk '{print $1}')
+cat $PROFILES/biglinux-arm-profiles/services/minimal | sed -e '/^#/d' > $SERVICES_LIST
 
 # Create the rootfs used for the image
 create_emmc_install

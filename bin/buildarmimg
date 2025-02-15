@@ -93,7 +93,7 @@ LOGFILE="/var/log/biglinux-arm-tools/buildarmimg-$(date +%Y-%m-%d-%H:%M).log"
 IMGNAME="biglinux-arm-$EDITION-$DEVICE-$VERSION"
 ARCH='aarch64'
 
-if [ ! -d "$PROFILES/arm-profiles" ]; then
+if [ ! -d "$PROFILES/biglinux-arm-profiles" ]; then
     getarmprofiles 2>&1 | tee --append "$LOGFILE"
 fi
 
@@ -104,10 +104,10 @@ check_branch
 timer_start=$(get_timer)
 
 # Package lists
-PKG_DEVICE=$(grep "^[^#;]" $PROFILES/arm-profiles/devices/$DEVICE | awk '{print $1}')
-PKG_SHARED=$(grep "^[^#;]" $PROFILES/arm-profiles/editions/shared | sed -e 's/>'${DEVICE//pro/}' //' -e '/^>/d' -e 's/#.*//')
-PKG_EDITION=$(grep "^[^#;]" $PROFILES/arm-profiles/editions/$EDITION | sed -e 's/>'${DEVICE//pro/}' //' -e '/^>/d' -e 's/#.*//')
-cat $PROFILES/arm-profiles/services/$EDITION \
+PKG_DEVICE=$(grep "^[^#;]" $PROFILES/biglinux-arm-profiles/devices/$DEVICE | awk '{print $1}')
+PKG_SHARED=$(grep "^[^#;]" $PROFILES/biglinux-arm-profiles/editions/shared | sed -e 's/>'${DEVICE//pro/}' //' -e '/^>/d' -e 's/#.*//')
+PKG_EDITION=$(grep "^[^#;]" $PROFILES/biglinux-arm-profiles/editions/$EDITION | sed -e 's/>'${DEVICE//pro/}' //' -e '/^>/d' -e 's/#.*//')
+cat $PROFILES/biglinux-arm-profiles/services/$EDITION \
     | sed -e '/^#/d' -e 's/>'${DEVICE//pro/}' //' -e '/^>/d' -e 's/#.*//' \
     > $SERVICES_LIST
 
