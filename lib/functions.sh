@@ -13,7 +13,7 @@ PKGDIR='/var/cache/biglinux-arm-tools/pkg'
 ROOTFS_IMG='/var/lib/biglinux-arm-tools/img'
 TMPDIR='/var/lib/biglinux-arm-tools/tmp'
 IMGDIR='/var/cache/biglinux-arm-tools/img'
-IMGNAME="biglinux-arm-${EDITION-$DEVICE}-${VERSION}"
+IMGNAME="BigLinux-ARM-${EDITION-$DEVICE}-${VERSION}"
 PROFILES='/usr/share/biglinux-arm-tools/profiles'
 NSPAWN='systemd-nspawn -q --resolv-conf=copy-host --timezone=off -D'
 OSDN='storage.osdn.net:/storage/groups/m/ma/biglinux-arm'
@@ -345,19 +345,19 @@ create_rootfs_img() {
     mkdir -p $ROOTFS_IMG/rootfs_$ARCH
     if [[ "$KEEPROOTFS" = "false" ]]; then
         info "Removing old $ARCH rootfs archive..."
-        rm -rf $ROOTFS_IMG/biglinux-arm-$ARCH-latest.tar.gz*
+        rm -rf $ROOTFS_IMG/BigLinux-ARM-$ARCH-latest.tar.gz*
     fi
 
     # Fetch new rootfs, if it does not exist
-    if [ ! -f "$ROOTFS_IMG/biglinux-arm-$ARCH-latest.tar.gz" ]; then
+    if [ ! -f "$ROOTFS_IMG/BigLinux-ARM-$ARCH-latest.tar.gz" ]; then
         info "Downloading latest $ARCH rootfs archive..."
         wget -q --show-progress --progress=bar:force:noscroll \
-             https://github.com/jdorigao/rootfs/releases/latest/download/biglinux-arm-$ARCH-latest.tar.gz \
-             -O "$ROOTFS_IMG/biglinux-arm-$ARCH-latest.tar.gz"
+             https://github.com/jdorigao/rootfs/releases/latest/download/BigLinux-ARM-$ARCH-latest.tar.gz \
+             -O "$ROOTFS_IMG/BigLinux-ARM-$ARCH-latest.tar.gz"
     fi
 
     info "Extracting $ARCH rootfs..."
-    bsdtar -xpf $ROOTFS_IMG/biglinux-arm-$ARCH-latest.tar.gz -C $ROOTFS_IMG/rootfs_$ARCH
+    bsdtar -xpf $ROOTFS_IMG/BigLinux-ARM-$ARCH-latest.tar.gz -C $ROOTFS_IMG/rootfs_$ARCH
 
     # Create a "marker" that tells the packages that they're installed as part of building
     # an image, which is currently used by the "generic-post-install" package only
@@ -754,9 +754,9 @@ create_emmc_install() {
     echo "Enabling ethernet for first setup..."
     configure_cli_ethernet
 
-    if [ -f "$IMGDIR/biglinux-arm-$EDITION-$DEVICE-$VERSION.img.xz" ]; then
+    if [ -f "$IMGDIR/BigLinux-ARM-$EDITION-$DEVICE-$VERSION.img.xz" ]; then
         info "Copying local image for $EDITION edition on $DEVICE..."
-        cp -a $IMGDIR/biglinux-arm-$EDITION-$DEVICE-$VERSION.img.xz $CHROOTDIR/var/tmp/biglinux-arm.img.xz
+        cp -a $IMGDIR/BigLinux-ARM-$EDITION-$DEVICE-$VERSION.img.xz $CHROOTDIR/var/tmp/biglinux-arm.img.xz
         sync
     else
         info "Downloading image for $EDITION edition on $DEVICE..."

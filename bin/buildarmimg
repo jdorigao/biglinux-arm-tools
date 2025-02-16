@@ -90,7 +90,7 @@ done
 mkdir -p /var/log/biglinux-arm-tools
 LOGFILE="/var/log/biglinux-arm-tools/buildarmimg-$(date +%Y-%m-%d-%H:%M).log"
 
-IMGNAME="biglinux-arm-$EDITION-$DEVICE-$VERSION"
+IMGNAME="BigLinux-ARM-$EDITION-$DEVICE-$VERSION"
 ARCH='aarch64'
 
 if [ ! -d "$PROFILES/biglinux-arm-profiles" ]; then

@@ -68,7 +68,7 @@ if [ "x" == "x$VERSION" ]; then
   exit
 fi
 
-IMGNAME="biglinux-arm-$EDITION-$DEVICE-$VERSION-emmc-installer-$FLASHVERSION"
+IMGNAME="BigLinux-ARM-$EDITION-$DEVICE-$VERSION-emmc-installer-$FLASHVERSION"
 ARCH='aarch64'
 
 if [ ! -d "$PROFILES/biglinux-arm-profiles" ]; then

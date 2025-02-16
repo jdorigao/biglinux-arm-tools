@@ -24,8 +24,8 @@ create_rootfs () {
     # Perform basic rootfs initialization
     msg "Creating rootfs..."
     mkdir -p $BUILDDIR/$ARCH/etc
-    ln -s ../usr/lib/os-release $BUILDDIR/$ARCH/etc/os-release
-    $LIBDIR/pacstrap -G -M -C $LIBDIR/pacman.conf.$ARCH $BUILDDIR/$ARCH pacman
+    $CHROOTDIR pacman-key --init
+    $LIBDIR/pacstrap -G -M -C $LIBDIR/pacman.conf.$ARCH $BUILDDIR/$ARCH pacman biglinux-arm-keyring 
 
     # Enable cross-architecture chrooting
     cp -a /usr/bin/qemu-aarch64-static $BUILDDIR/$ARCH/usr/bin
@@ -37,10 +37,37 @@ create_rootfs () {
     $NSPAWN $BUILDDIR/$ARCH pacman-mirrors -f5 > /dev/null 2>&1
 }
 
+biglinux_rootfs () {
+  msg "BigLinux Changes..."
+
+  # BigLinux Information
+  sed -i 's|^Manjaro Linux|BigLinux, based in Manjaro Linux|g' $BUILDDIR/$ARCH/etc/issue
+  sed -i 's|^ *\bNAME\b *=.*|NAME="BigLinux based in Manjaro Linux"|;s|^ *\ID\b *=.*|ID="biglinux-arm"|;s|^ *\ID_LIKE\b *=.*|ID_LIKE="biglinux arch"|;s|^ *\bPRETTY_NAME\b *=.*|PRETTY_NAME="BigLinux based in Manjaro Linux"|;s|^ *\ANSI_COLOR\b *=.*|ANSI_COLOR="32;1;24;144;200"|;s|^ *\bHOME_URL\b *=.*|HOME_URL="https://www.biglinux.com.br"|;s|^ *\bSUPPORT_URL\b *=.*|SUPPORT_URL="https://forum.biglinux.com.br"|;s|^ *\LOGO\b *=.*|LOGO="biglinux-blue"|' $BUILDDIR/$ARCH/usr/lib/os-release
+  sed -i 's|^ *\bDISTRIB_ID\b *=.*|DISTRIB_ID="BigLinux based in Manjaro Linux"|g;s|^ *\bDISTRIB_DESCRIPTION\b *=.*|DISTRIB_DESCRIPTION="BigLinux"|g' $BUILDDIR/$ARCH/usr/lib/os-release
+
+  # Change name on login
+  echo 'Welcome to BigLinux ARM
+~~Website:  https://www.biglinux.com.br
+~~Forum:    https://forum.biglinux.com.br
+~~Telegram: https://t.me/BigLinuxCommunity' | tee $BUILDDIR/$ARCH/etc/motd
+
+  # Add biglinux repo
+  echo '
+#[biglinux-testing]
+#SigLevel = PackageRequired
+SigLevel = Optional TrustAll
+Server = https://repo.biglinux.com.br/testing/aarch64
+
+[biglinux-stable]
+#SigLevel = PackageRequired
+SigLevel = Optional TrustAll
+Server = https://repo.biglinux.com.br/stable/aarch64' | tee -a $BUILDDIR/$ARCH/etc/pacman.conf
+}
+
 compress_rootfs () {
     msg "Compressing rootfs..."
     cd $BUILDDIR/$ARCH
-    tar -czf $IMGDIR/biglinux-arm-$ARCH-latest.tar.gz .
+    tar -czf $IMGDIR/BigLinux-ARM-$ARCH-latest.tar.gz .
     rm -rf $BUILDDIR/$ARCH
 }
 
@@ -73,6 +100,7 @@ LOGFILE="/var/log/biglinux-arm-tools/buildrootfs-$(date +%Y-%m-%d-%H:%M).log"
 
 # Commands
 create_rootfs 2>&1 | tee --append "$LOGFILE"
+biglinux_rootfs 2>&1 | tee --append "$LOGFILE"
 compress_rootfs 2>&1 | tee --append "$LOGFILE"
 
 # EOF
