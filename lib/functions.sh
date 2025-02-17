@@ -14,6 +14,7 @@ ROOTFS_IMG='/var/lib/biglinux-arm-tools/img'
 TMPDIR='/var/lib/biglinux-arm-tools/tmp'
 IMGDIR='/var/cache/biglinux-arm-tools/img'
 IMGNAME="BigLinux-ARM-${EDITION-$DEVICE}-${VERSION}"
+REPOPROFILES='https://github.com/jdorigao/biglinux-arm-profiles.git'
 PROFILES='/usr/share/biglinux-arm-tools/profiles'
 NSPAWN='systemd-nspawn -q --resolv-conf=copy-host --timezone=off -D'
 OSDN='storage.osdn.net:/storage/groups/m/ma/biglinux-arm'
@@ -1515,7 +1516,7 @@ export_and_clean() {
 
 clone_profiles() {
     cd $PROFILES
-    git clone --branch main https://github.com/biglinux/biglinux-arm-profiles.git
+    git clone --branch dev $REPOPROFILES
 }
 
 get_profiles() {
