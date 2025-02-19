@@ -10,28 +10,28 @@ check_root
 opt="fhp"
 
 while getopts "${opt}" arg; do
-  case $arg in
+    case $arg in
     f)
-      echo "Forcing git update..."
-      rm -rf $PROFILES/biglinux-arm-profiles
-      ;;
+        echo "Forcing git update..."
+        rm -rf $PROFILES/biglinux-arm-profiles
+        ;;
     p)
-      echo "Using branch 'pp-factory'..."
-      FACTORY=true
-      ;;
+        echo "Using branch 'pp-factory'..."
+        FACTORY=true
+        ;;
     \?)
-      echo "Invalid option: -${OPTARG}"
-      exit 1
-      ;;
-    h|?)
-      usage_getarmprofiles
-      exit 1
-      ;;
+        echo "Invalid option: -${OPTARG}"
+        exit 1
+        ;;
+    h | ?)
+        usage_getarmprofiles
+        exit 1
+        ;;
     :)
-      echo "Option -${OPTARG} requires an argument, aborting"
-      exit 1
-      ;;
-  esac
+        echo "Option -${OPTARG} requires an argument, aborting"
+        exit 1
+        ;;
+    esac
 done
 
 get_profiles

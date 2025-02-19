@@ -15,7 +15,7 @@ check_root
 # check if script is already running
 check_running
 
-create_rootfs () {
+create_rootfs() {
     # Remove old rootfs if it exists
     if [ -d $BUILDDIR/$ARCH ]; then
         echo "Removing old rootfs..."
@@ -30,27 +30,27 @@ create_rootfs () {
 
     # Enable cross-architecture chrooting
     cp -a /usr/bin/qemu-aarch64-static $BUILDDIR/$ARCH/usr/bin
-    
+
     # Fix SSL in the rootfs
     rm -f $BUILDDIR/$ARCH/etc/ssl/certs/ca-certificates.crt
     rm -f $BUILDDIR/$ARCH/etc/ca-certificates/extracted/tls-ca-bundle.pem
     cp -a /etc/ssl/certs/ca-certificates.crt $BUILDDIR/$ARCH/etc/ssl/certs
     cp -a /etc/ca-certificates/extracted/tls-ca-bundle.pem $BUILDDIR/$ARCH/etc/ca-certificates/extracted
-    
+
     info "Setting up keyrings..."
-    $NSPAWN $BUILDDIR/$ARCH pacman-key --init > /dev/null 2>&1
-    $NSPAWN $BUILDDIR/$ARCH pacman-key --populate archlinuxarm manjaro manjaro-arm > /dev/null 2>&1
-    $NSPAWN $BUILDDIR/$ARCH pacman-mirrors -f5 > /dev/null 2>&1
+    $NSPAWN $BUILDDIR/$ARCH pacman-key --init >/dev/null 2>&1
+    $NSPAWN $BUILDDIR/$ARCH pacman-key --populate archlinuxarm manjaro manjaro-arm >/dev/null 2>&1
+    $NSPAWN $BUILDDIR/$ARCH pacman-mirrors -f5 >/dev/null 2>&1
 }
 
-compress_docker () {
+compress_docker() {
     msg "Making Docker image..."
 
     # Make sure that Docker service is running
     systemctl start docker
 
     # Create the Docker image itself
-    tar --numeric-owner --xattrs --acls -C $BUILDDIR/$ARCH -c . | docker import - $DOCKER_IMAGE_NAME > /dev/null 2>&1
+    tar --numeric-owner --xattrs --acls -C $BUILDDIR/$ARCH -c . | docker import - $DOCKER_IMAGE_NAME >/dev/null 2>&1
     docker image tag $DOCKER_IMAGE_NAME:latest manjaroarm/$DOCKER_IMAGE_NAME:latest
 
     # Upload the Docker image to DockerHub and remove it locally
@@ -63,23 +63,23 @@ compress_docker () {
 opt=":a:h"
 
 while getopts "${opt}" arg; do
-  case $arg in
+    case $arg in
     a)
-      ARCH="${OPTARG}"
-      ;;
+        ARCH="${OPTARG}"
+        ;;
     \?)
-      echo "Invalid option: -${OPTARG}"
-      exit 1
-      ;;
-    h|?)
-      echo "-h <help>       This help"
-      exit 1
-      ;;
+        echo "Invalid option: -${OPTARG}"
+        exit 1
+        ;;
+    h | ?)
+        echo "-h <help>       This help"
+        exit 1
+        ;;
     :)
-      echo "Option -${OPTARG} requires an argument, aborting"
-      exit 1
-      ;;
-  esac
+        echo "Option -${OPTARG} requires an argument, aborting"
+        exit 1
+        ;;
+    esac
 done
 
 # Log file

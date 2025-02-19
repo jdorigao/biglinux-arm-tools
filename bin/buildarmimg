@@ -25,63 +25,63 @@ check_running
 opt=":e:d:v:i:b:nfxhk:mos:p:cz:"
 
 while getopts "${opt}" arg; do
-  case $arg in
+    case $arg in
     c)
-      COLORS='true'
-      ;;
+        COLORS='true'
+        ;;
     e)
-      EDITION="${OPTARG}"
-      ;;
+        EDITION="${OPTARG}"
+        ;;
     d)
-      DEVICE="${OPTARG}"
-      ;;
+        DEVICE="${OPTARG}"
+        ;;
     v)
-      VERSION="${OPTARG}"
-      ;;
+        VERSION="${OPTARG}"
+        ;;
     n)
-      KEEPROOTFS='false'
-      ;;
+        KEEPROOTFS='false'
+        ;;
     x)
-      EXTRACTED='true'
-      ;;
+        EXTRACTED='true'
+        ;;
     i)
-      ADD_PACKAGES="${OPTARG}"
-      check_local_pkgs
-      ;;
+        ADD_PACKAGES="${OPTARG}"
+        check_local_pkgs
+        ;;
     b)
-      BRANCH="${OPTARG}"
-      ;;
+        BRANCH="${OPTARG}"
+        ;;
     f)
-      FACTORY='true'
-      ;;
+        FACTORY='true'
+        ;;
     m)
-      BMAP='true'
-     ;;
+        BMAP='true'
+        ;;
     k)
-      CUSTOM_REPO="${OPTARG}"
-     ;;
+        CUSTOM_REPO="${OPTARG}"
+        ;;
     s)
-      HOSTNAME="${OPTARG}"
-     ;;
+        HOSTNAME="${OPTARG}"
+        ;;
     p)
-      FILESYSTEM="${OPTARG}"
-      ;;
+        FILESYSTEM="${OPTARG}"
+        ;;
     z)
-      COMPRESSION="${OPTARG}"
-      ;;
+        COMPRESSION="${OPTARG}"
+        ;;
     \?)
-      echo "Option -${OPTARG} is not valid, aborting"
-      exit 1
-      ;;
-    h|?)
-      usage_build_img
-      exit 1
-      ;;
+        echo "Option -${OPTARG} is not valid, aborting"
+        exit 1
+        ;;
+    h | ?)
+        usage_build_img
+        exit 1
+        ;;
     :)
-      echo "Option -${OPTARG} requires an argument, aborting"
-      exit 1
-      ;;
-  esac
+        echo "Option -${OPTARG} requires an argument, aborting"
+        exit 1
+        ;;
+    esac
 done
 
 [[ "$COLORS" = "true" ]] && enable_colors
@@ -107,20 +107,20 @@ timer_start=$(get_timer)
 PKG_DEVICE=$(grep "^[^#;]" $PROFILES/biglinux-arm-profiles/devices/$DEVICE | awk '{print $1}')
 PKG_SHARED=$(grep "^[^#;]" $PROFILES/biglinux-arm-profiles/editions/shared | sed -e 's/>'${DEVICE//pro/}' //' -e '/^>/d' -e 's/#.*//')
 PKG_EDITION=$(grep "^[^#;]" $PROFILES/biglinux-arm-profiles/editions/$EDITION | sed -e 's/>'${DEVICE//pro/}' //' -e '/^>/d' -e 's/#.*//')
-cat $PROFILES/biglinux-arm-profiles/services/$EDITION \
-    | sed -e '/^#/d' -e 's/>'${DEVICE//pro/}' //' -e '/^>/d' -e 's/#.*//' \
-    > $SERVICES_LIST
+cat $PROFILES/biglinux-arm-profiles/services/$EDITION |
+    sed -e '/^#/d' -e 's/>'${DEVICE//pro/}' //' -e '/^>/d' -e 's/#.*//' \
+        >$SERVICES_LIST
 
 # Create the rootfs used for the image
 create_rootfs_img 2>&1 | tee --append "$LOGFILE"
 
 case "$DEVICE" in
-    halium-9)
-        create_img_halium 2>&1 | tee --append "$LOGFILE"
-        ;;
-    *)
-        create_img 2>&1 | tee --append "$LOGFILE"
-        ;;
+halium-9)
+    create_img_halium 2>&1 | tee --append "$LOGFILE"
+    ;;
+*)
+    create_img 2>&1 | tee --append "$LOGFILE"
+    ;;
 esac
 
 if [ $BMAP = true ]; then

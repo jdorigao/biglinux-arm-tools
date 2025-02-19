@@ -15,68 +15,64 @@ enable_colors
 opt=":i:d:e:v:k:u:th"
 
 while getopts "${opt}" arg; do
-  case $arg in
+    case $arg in
     i)
-      IMAGE="${OPTARG}"
-      ;;
+        IMAGE="${OPTARG}"
+        ;;
     d)
-      DEVICE="${OPTARG}"
-      ;;
+        DEVICE="${OPTARG}"
+        ;;
     e)
-      EDITION="${OPTARG}"
-      ;;
+        EDITION="${OPTARG}"
+        ;;
     v)
-      VERSION="${OPTARG}"
-      ;;
+        VERSION="${OPTARG}"
+        ;;
     k)
-      GPGMAIL="${OPTARG}"
-      ;;
+        GPGMAIL="${OPTARG}"
+        ;;
     u)
-      STORAGE_USER="${OPTARG}"
-      ;;
+        STORAGE_USER="${OPTARG}"
+        ;;
     t)
-      TORRENT="true"
-      ;;
+        TORRENT="true"
+        ;;
     \?)
-      echo "Invalid option: -${OPTARG}"
-      exit 1
-      ;;
-    h|?)
-      usage_deploy_img
-      exit 1
-      ;;
+        echo "Invalid option: -${OPTARG}"
+        exit 1
+        ;;
+    h | ?)
+        usage_deploy_img
+        exit 1
+        ;;
     :)
-      echo "Option -${OPTARG} requires an argument, aborting"
-      exit 1
-      ;;
-  esac
+        echo "Option -${OPTARG} requires an argument, aborting"
+        exit 1
+        ;;
+    esac
 done
 
 #required options
 if [ "x" == "x$IMAGE" ]; then
-  echo "-i [option] is required"
-  exit
+    echo "-i [option] is required"
+    exit
 fi
 if [ "x" == "x$GPGMAIL" ]; then
-  echo "-k [option] is required"
-  exit
+    echo "-k [option] is required"
+    exit
 fi
-
 
 # Create checksums for the image
 checksum_img
 
 #create torrent for image
-if [[ $TORRENT = "true" ]]
-then
-create_torrent
+if [[ $TORRENT = "true" ]]; then
+    create_torrent
 fi
 
 # Upload image + checksums to image server
 img_upload
 
-
 # remove pkg + sig from cache folder
 #msg "Removing local files..."
 #rm $image*
- 

@@ -22,50 +22,50 @@ check_running
 opt=":e:d:v:i:f:nxh"
 
 while getopts "${opt}" arg; do
-  case $arg in
+    case $arg in
     e)
-      EDITION="${OPTARG}"
-      ;;
+        EDITION="${OPTARG}"
+        ;;
     d)
-      DEVICE="${OPTARG}"
-      ;;
+        DEVICE="${OPTARG}"
+        ;;
     v)
-      VERSION="${OPTARG}"
-      ;;
+        VERSION="${OPTARG}"
+        ;;
     n)
-      KEEPROOTFS=false
-      ;;
+        KEEPROOTFS=false
+        ;;
     x)
-      EXTRACTED=true
-      ;;
+        EXTRACTED=true
+        ;;
     i)
-      ADD_PACKAGES="${OPTARG}"
-      check_local_pkgs
-      ;;
+        ADD_PACKAGES="${OPTARG}"
+        check_local_pkgs
+        ;;
     f)
-      FLASHVERSION="${OPTARG}"
-      ;;
+        FLASHVERSION="${OPTARG}"
+        ;;
     \?)
-      echo "Invalid option: -${OPTARG}"
-      exit 1
-      ;;
-    h|?)
-      echo "Only works with existing images on OSDN.net"
-      usage_build_emmcflasher
-      exit 1
-      ;;
+        echo "Invalid option: -${OPTARG}"
+        exit 1
+        ;;
+    h | ?)
+        echo "Only works with existing images on OSDN.net"
+        usage_build_emmcflasher
+        exit 1
+        ;;
     :)
-      echo "Option -${OPTARG} requires an argument, aborting"
-      exit 1
-      ;;
-  esac
+        echo "Option -${OPTARG} requires an argument, aborting"
+        exit 1
+        ;;
+    esac
 done
 
 enable_colors
 
 if [ "x" == "x$VERSION" ]; then
-  echo "-v [option] is required"
-  exit
+    echo "-v [option] is required"
+    exit
 fi
 
 IMGNAME="BigLinux-ARM-$EDITION-$DEVICE-$VERSION-emmc-installer-$FLASHVERSION"
@@ -82,7 +82,7 @@ timer_start=$(get_timer)
 PKG_DEVICE=$(grep "^[^#;]" $PROFILES/biglinux-arm-profiles/devices/$DEVICE | awk '{print $1}')
 PKG_EDITION=$(grep "^[^#;]" $PROFILES/biglinux-arm-profiles/editions/minimal | awk '{print $1}')
 SRV_EDITION=$(grep "^[^#;]" $PROFILES/biglinux-arm-profiles/services/minimal | awk '{print $1}')
-cat $PROFILES/biglinux-arm-profiles/services/minimal | sed -e '/^#/d' > $SERVICES_LIST
+cat $PROFILES/biglinux-arm-profiles/services/minimal | sed -e '/^#/d' >$SERVICES_LIST
 
 # Create the rootfs used for the image
 create_emmc_install

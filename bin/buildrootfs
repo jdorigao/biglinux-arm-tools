@@ -5,7 +5,7 @@ LIBDIR=/usr/share/biglinux-arm-tools/lib
 ARCH="aarch64"
 
 # Import the library
-source $LIBDIR/functions.sh 
+source $LIBDIR/functions.sh
 enable_colors
 
 # Check for root
@@ -14,7 +14,7 @@ check_root
 # Check is the script already running
 check_running
 
-create_rootfs () {
+create_rootfs() {
     # Remove old rootfs if it exists
     if [ -d $BUILDDIR/$ARCH ]; then
         echo "Removing old rootfs..."
@@ -25,34 +25,34 @@ create_rootfs () {
     msg "Creating rootfs..."
     mkdir -p $BUILDDIR/$ARCH/etc
     $CHROOTDIR pacman-key --init
-    $LIBDIR/pacstrap -G -M -C $LIBDIR/pacman.conf.$ARCH $BUILDDIR/$ARCH pacman biglinux-arm-keyring 
+    $LIBDIR/pacstrap -G -M -C $LIBDIR/pacman.conf.$ARCH $BUILDDIR/$ARCH pacman biglinux-arm-keyring
 
     # Enable cross-architecture chrooting
     cp -a /usr/bin/qemu-aarch64-static $BUILDDIR/$ARCH/usr/bin
-    
+
     # Fix SSL in the rootfs
     $NSPAWN $BUILDDIR/$ARCH update-ca-trust
-    
+
     rm -f $BUILDDIR/$ARCH/var/cache/pacman/pkg/*
-    $NSPAWN $BUILDDIR/$ARCH pacman-mirrors -f5 > /dev/null 2>&1
+    $NSPAWN $BUILDDIR/$ARCH pacman-mirrors -f5 >/dev/null 2>&1
 }
 
-biglinux_rootfs () {
-  msg "BigLinux Changes..."
+biglinux_rootfs() {
+    msg "BigLinux Changes..."
 
-  # BigLinux Information
-  sed -i 's|^Manjaro Linux|BigLinux, based in Manjaro Linux|g' $BUILDDIR/$ARCH/etc/issue
-  sed -i 's|^ *\bNAME\b *=.*|NAME="BigLinux based in Manjaro Linux"|;s|^ *\ID\b *=.*|ID="biglinux-arm"|;s|^ *\ID_LIKE\b *=.*|ID_LIKE="biglinux arch"|;s|^ *\bPRETTY_NAME\b *=.*|PRETTY_NAME="BigLinux based in Manjaro Linux"|;s|^ *\ANSI_COLOR\b *=.*|ANSI_COLOR="32;1;24;144;200"|;s|^ *\bHOME_URL\b *=.*|HOME_URL="https://www.biglinux.com.br"|;s|^ *\bSUPPORT_URL\b *=.*|SUPPORT_URL="https://forum.biglinux.com.br"|;s|^ *\LOGO\b *=.*|LOGO="biglinux-blue"|' $BUILDDIR/$ARCH/usr/lib/os-release
-  sed -i 's|^ *\bDISTRIB_ID\b *=.*|DISTRIB_ID="BigLinux based in Manjaro Linux"|g;s|^ *\bDISTRIB_DESCRIPTION\b *=.*|DISTRIB_DESCRIPTION="BigLinux"|g' $BUILDDIR/$ARCH/usr/lib/os-release
+    # BigLinux Information
+    sed -i 's|^Manjaro Linux|BigLinux, based in Manjaro Linux|g' $BUILDDIR/$ARCH/etc/issue
+    sed -i 's|^ *\bNAME\b *=.*|NAME="BigLinux based in Manjaro Linux"|;s|^ *\ID\b *=.*|ID="biglinux-arm"|;s|^ *\ID_LIKE\b *=.*|ID_LIKE="biglinux arch"|;s|^ *\bPRETTY_NAME\b *=.*|PRETTY_NAME="BigLinux based in Manjaro Linux"|;s|^ *\ANSI_COLOR\b *=.*|ANSI_COLOR="32;1;24;144;200"|;s|^ *\bHOME_URL\b *=.*|HOME_URL="https://www.biglinux.com.br"|;s|^ *\bSUPPORT_URL\b *=.*|SUPPORT_URL="https://forum.biglinux.com.br"|;s|^ *\LOGO\b *=.*|LOGO="biglinux-blue"|' $BUILDDIR/$ARCH/usr/lib/os-release
+    sed -i 's|^ *\bDISTRIB_ID\b *=.*|DISTRIB_ID="BigLinux based in Manjaro Linux"|g;s|^ *\bDISTRIB_DESCRIPTION\b *=.*|DISTRIB_DESCRIPTION="BigLinux"|g' $BUILDDIR/$ARCH/usr/lib/os-release
 
-  # Change name on login
-  echo 'Welcome to BigLinux ARM
+    # Change name on login
+    echo 'Welcome to BigLinux ARM
 ~~Website:  https://www.biglinux.com.br
 ~~Forum:    https://forum.biglinux.com.br
 ~~Telegram: https://t.me/BigLinuxCommunity' | tee $BUILDDIR/$ARCH/etc/motd
 
-  # Add biglinux repo
-  echo '
+    # Add biglinux repo
+    echo '
 #[biglinux-testing]
 #SigLevel = PackageRequired
 SigLevel = Optional TrustAll
@@ -64,7 +64,7 @@ SigLevel = Optional TrustAll
 Server = https://repo.biglinux.com.br/stable/aarch64' | tee -a $BUILDDIR/$ARCH/etc/pacman.conf
 }
 
-compress_rootfs () {
+compress_rootfs() {
     msg "Compressing rootfs..."
     cd $BUILDDIR/$ARCH
     tar -czf $IMGDIR/BigLinux-ARM-$ARCH-latest.tar.gz .
@@ -75,23 +75,23 @@ compress_rootfs () {
 opt=":a:h"
 
 while getopts "${opt}" arg; do
-  case $arg in
+    case $arg in
     a)
-      ARCH="${OPTARG}"
-      ;;
+        ARCH="${OPTARG}"
+        ;;
     \?)
-      echo "Invalid option: -${OPTARG}"
-      exit 1
-      ;;
-    h|?)
-      echo "-h <help>       This help"
-      exit 1
-      ;;
+        echo "Invalid option: -${OPTARG}"
+        exit 1
+        ;;
+    h | ?)
+        echo "-h <help>       This help"
+        exit 1
+        ;;
     :)
-      echo "Option -${OPTARG} requires an argument, aborting"
-      exit 1
-      ;;
-  esac
+        echo "Option -${OPTARG} requires an argument, aborting"
+        exit 1
+        ;;
+    esac
 done
 
 # Log file

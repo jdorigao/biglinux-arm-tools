@@ -22,50 +22,50 @@ check_running
 opt=":p:a:i:r:nb:kh"
 
 while getopts "${opt}" arg; do
-  case $arg in
+    case $arg in
     p)
-      PACKAGE="${OPTARG%/}"
-      ;;
+        PACKAGE="${OPTARG%/}"
+        ;;
     a)
-      ARCH="${OPTARG}"
-      ;;
+        ARCH="${OPTARG}"
+        ;;
     k)
-      BUILDCLEAN=false
-      ;;
+        BUILDCLEAN=false
+        ;;
     b)
-      BRANCH="${OPTARG}"
-      ;;
+        BRANCH="${OPTARG}"
+        ;;
     i)
-      ADD_PACKAGES="${OPTARG}"
-      check_local_pkgs
-      ;;
+        ADD_PACKAGES="${OPTARG}"
+        check_local_pkgs
+        ;;
     n)
-      INSTALL_NEW=true
-      ;;
+        INSTALL_NEW=true
+        ;;
     r)
-      CUSTOM_REPO="${OPTARG}"
-     ;;
+        CUSTOM_REPO="${OPTARG}"
+        ;;
     \?)
-      echo "Invalid option: -${OPTARG}"
-      exit 1
-      ;;
-    h|?)
-      usage_build_pkg
-      exit 1
-      ;;
+        echo "Invalid option: -${OPTARG}"
+        exit 1
+        ;;
+    h | ?)
+        usage_build_pkg
+        exit 1
+        ;;
     :)
-      echo "Option -${OPTARG} requires an argument, aborting"
-      exit 1
-      ;;
-  esac
+        echo "Option -${OPTARG} requires an argument, aborting"
+        exit 1
+        ;;
+    esac
 done
 
 enable_colors
 
 # Both package and architecture are needed
 if [ "x" == "x$PACKAGE" ]; then
-  echo "Option -p must be specified, aborting"
-  exit
+    echo "Option -p must be specified, aborting"
+    exit
 fi
 
 # Build the 'any' packages on aarch64
@@ -78,7 +78,7 @@ check_branch
 
 # Start the timer
 timer_start=$(get_timer)
-   
+
 if [[ "$BUILDCLEAN" = "false" && ! -d $CHROOTDIR ]]; then
     msg "Rootfs not found, aborting; omit the -k option to generate a rootfs"
     exit 1
