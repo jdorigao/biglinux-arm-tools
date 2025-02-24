@@ -24,8 +24,8 @@ create_rootfs() {
     # Perform basic rootfs initialization
     msg "Creating rootfs..."
     mkdir -p $BUILDDIR/$ARCH/etc
-    $CHROOTDIR pacman-key --init
-    $LIBDIR/pacstrap -G -M -C $LIBDIR/pacman.conf.$ARCH $BUILDDIR/$ARCH pacman biglinux-arm-keyring
+    ln -s ../usr/lib/os-release $BUILDDIR/$ARCH/etc/os-release
+    $LIBDIR/pacstrap -G -M -C $LIBDIR/pacman.conf.$ARCH $BUILDDIR/$ARCH pacman
 
     # Enable cross-architecture chrooting
     cp -a /usr/bin/qemu-aarch64-static $BUILDDIR/$ARCH/usr/bin
@@ -53,13 +53,11 @@ biglinux_rootfs() {
 
     # Add biglinux repo
     echo '
-#[biglinux-testing]
-#SigLevel = PackageRequired
+[biglinux-testing]
 SigLevel = Optional TrustAll
 Server = https://repo.biglinux.com.br/testing/aarch64
 
 [biglinux-stable]
-#SigLevel = PackageRequired
 SigLevel = Optional TrustAll
 Server = https://repo.biglinux.com.br/stable/aarch64' | tee -a $BUILDDIR/$ARCH/etc/pacman.conf
 }

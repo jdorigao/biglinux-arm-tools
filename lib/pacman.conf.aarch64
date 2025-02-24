@@ -85,11 +85,9 @@ Server = https://repo.manjaro.org/repo/arm-stable/$repo/$arch
 #Server = file:///home/custompkgs
 
 [biglinux-testing]
-# SigLevel = PackageRequired
 SigLevel = Optional TrustAll
 Server = https://repo.biglinux.com.br/testing/aarch64
 
 [biglinux-stable]
-# SigLevel = PackageRequired
 SigLevel = Optional TrustAll
 Server = https://repo.biglinux.com.br/stable/aarch64
