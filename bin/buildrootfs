@@ -24,6 +24,7 @@ create_rootfs() {
     # Perform basic rootfs initialization
     msg "Creating rootfs..."
     mkdir -p $BUILDDIR/$ARCH/etc
+    ln -s ../usr/lib/os-release $BUILDDIR/$ARCH/etc/os-release
     $CHROOTDIR pacman-key --init
     $LIBDIR/pacstrap -G -M -C $LIBDIR/pacman.conf.$ARCH $BUILDDIR/$ARCH pacman biglinux-arm-keyring
 
@@ -53,7 +54,7 @@ biglinux_rootfs() {
 
     # Add biglinux repo
     echo '
-#[biglinux-testing]
+[biglinux-testing]
 #SigLevel = PackageRequired
 SigLevel = Optional TrustAll
 Server = https://repo.biglinux.com.br/testing/aarch64
